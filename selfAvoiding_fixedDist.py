@@ -4,6 +4,10 @@ import math
 import interceptInRange
 
 # The self-avoiding walk!!  Yay!
+# This self-avoiding walk (fixed distance) is much faster than the previous implementation!
+# This is because the approach is no longer angle-based.  The turtle.setHeading(...) is what
+# was slowing it down.
+#
 # This is a fixed-distance walk, where the user is prompted for the step length.
 # The functionality is as follows:
 #       - draw 2 lines (i.e. 3 points)
@@ -13,9 +17,6 @@ import interceptInRange
 #         the step between the last point and the new point does not intersect
 #         any of the previous steps
 # If the walk gets stuck for 100 tries (i.e. checking 100 points) then it exits.
-#
-# Here, the points are chosen via random angle (new point the chosen distance from
-# the last point, in this direction).
 
 # function to run the self-avoiding walk
 # t --> the turtle
@@ -54,11 +55,10 @@ def selfAvoidingWalk(t, x, y, rep, dist):
         done = False
         stuck = 0
         while not done:
-            # pick a random angle, and take the components (fixed distance of 80)
-            degrees = random.randint(0, 360) 
-            t.setheading(degrees)
-            w = dist * math.sin(degrees * 180 / math.pi) 
-            z = dist * math.cos(degrees * 180 / math.pi)
+            # pick a random component and its corresponding component
+            # the * ((-1) ** (random.randint(1, 2))) is to ensure that the component could be in any of the 4 quadrants
+            w = random.random() * dist * ((-1) ** (random.randint(1, 2))) 
+            z = math.sqrt(dist**2 - w**2) * ((-1) ** (random.randint(1, 2)))
             
             if abs(x + w) < t.screen.window_width() / 2 and abs(y + z) < t.screen.window_height() / 2: # check if the point is within the window 
                 (currentX, currentY) = (x + w, y + z) # coordinates to test
