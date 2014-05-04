@@ -9,7 +9,7 @@ import random
 
 # function to run the random walk
 # t --> the turtle
-# x and y --> the x and y coordinates of the ant hill respectively
+# x and y --> the x and y coordinates of the starting position respectively
 # rep --> number of steps for the walk 
 def randomWalk(t, x, y, rep):
     t.up()
