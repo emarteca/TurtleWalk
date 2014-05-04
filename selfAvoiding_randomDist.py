@@ -3,27 +3,16 @@ import random
 import math
 import interceptInRange
 
-# The self-avoiding walk!!  Yay!
-# This self-avoiding walk (fixed distance) is much faster than the previous implementation!
-# This is because the approach is no longer angle-based.  The turtle.setHeading(...) is what
-# was slowing it down.
-#
-# This is a fixed-distance walk, where the user is prompted for the step length.
-# The functionality is as follows:
-#       - draw 2 lines (i.e. 3 points)
-#       - keep track of all the points in the walk
-#       - keep track of the equations of the lines between all adjacent points
-#       - for the rest of the steps, before walking to a new point, ensure that
-#         the step between the last point and the new point does not intersect
-#         any of the previous steps
-# If the walk gets stuck for 100 tries (i.e. checking 100 points) then it exits.
+# This self-avoiding walk is random distance for each step.
+# The functionality is the same as for the fixed-distance walk
+# Again, if the walk gets stuck for 100 tries (i.e. checking 100 points) then it exits.
+# Like the original self-avoiding walk, this is angle-based.
 
 # function to run the self-avoiding walk
 # t --> the turtle
 # x and y --> the x and y coordinates of the starting position respectively
 # rep --> number of steps for the walk (unless it gets stuck)
-# dist --> length of the step
-def selfAvoidingWalk(t, x, y, rep, dist):
+def selfAvoidingWalk_randomDist(t, x, y, rep):
     # first 3 points can't cross
     
     t.up()
@@ -31,17 +20,19 @@ def selfAvoidingWalk(t, x, y, rep, dist):
     t.down()
     arrayOfPoints = [(x, y)] # list of points in the walk
     
-    step = random.random() * dist * ((-1) ** (random.randint(1, 2)))
-    y += math.sqrt(dist**2 - step**2) * ((-1)**(random.randint(1, 2)))
-    x += step
+    degrees = random.randint(0, 360)
+    t.setheading(degrees)
+    x += (random.randint(-(t.screen.window_width() / 5), t.screen.window_width() / 5)) * math.sin(degrees * 180 / math.pi) 
+    y += (random.randint(-(t.screen.window_width() / 5), t.screen.window_width() / 5)) * math.cos(degrees * 180 / math.pi)
     arrayOfPoints += [(x, y)]
     t.goto(x, y)
     (m, b) = solveLinearEquation(arrayOfPoints[0], arrayOfPoints[1])
     linearEquations = [(m, b)]
     
-    step = random.random() * dist * ((-1) ** (random.randint(1, 2)))
-    y += math.sqrt(dist**2 - step**2) * ((-1)**(random.randint(1, 2)))
-    x += step
+    degrees = random.randint(0, 360)
+    t.setheading(degrees)
+    x += (random.randint(-(t.screen.window_width() / 5), t.screen.window_width() / 5)) * math.sin(degrees * 180 / math.pi) 
+    y += (random.randint(-(t.screen.window_width() / 5), t.screen.window_width() / 5)) * math.cos(degrees * 180 / math.pi)
     arrayOfPoints += [(x, y)]
     t.goto(x, y)
     (m, b) = solveLinearEquation(arrayOfPoints[1], arrayOfPoints[2])
@@ -54,10 +45,11 @@ def selfAvoidingWalk(t, x, y, rep, dist):
         done = False
         stuck = 0
         while not done:
-            # pick a random component and its corresponding component
-            # the * ((-1) ** (random.randint(1, 2))) is to ensure that the component could be in any of the 4 quadrants
-            w = random.random() * dist * ((-1) ** (random.randint(1, 2))) 
-            z = math.sqrt(dist**2 - w**2) * ((-1) ** (random.randint(1, 2)))
+            # pick a random angle, and take the components (fixed distance of 80)
+            degrees = random.randint(0, 360)
+            t.setheading(degrees)
+            w = (random.randint(-(t.screen.window_width() / 5), t.screen.window_width() / 5)) * math.sin(degrees * 180 / math.pi) 
+            z = (random.randint(-(t.screen.window_width() / 5), t.screen.window_width() / 5)) * math.cos(degrees * 180 / math.pi)
             
             if abs(x + w) < t.screen.window_width() / 2 and abs(y + z) < t.screen.window_height() / 2: # check if the point is within the window 
                 (currentX, currentY) = (x + w, y + z) # coordinates to test
@@ -135,15 +127,14 @@ def pointOfIntersection(lineA, lineB):
 # main function controls user inputs and runs the program   
 def main():
         t = Turtle()
-        # prompt for user inputs
+        # promp user for number of steps in the walk
         iterations = int(input("Enter the number of reps: "))
-        length = int(input("Enter the distance travelled for each step: "))
         t.pencolor("red")
         t.screen.bgcolor("black")
 
         # run the walk with the parameters specified
         # this walk starts at the origin (centre of the window) every time
-        selfAvoidingWalk(t, 0, 0, iterations, length)
+        selfAvoidingWalk_randomDist(t, 0, 0, iterations)
         t.hideturtle()
 
         print '\n\nProgram Done!'
