@@ -3,10 +3,11 @@ import random
 import math
 import interceptInRange
 
-# This self-avoiding walk is random distance for each step.
-# The functionality is the same as for the fixed-distance walk
+# Like the second implementation of the fixed-distance self-avoiding walk, this walk
+# is no longer angle-based (it's component-based instead, and got rid of the slow
+# turtle.setHeading(...) command).
+# The functionality is the same as for the previous random-distance walk
 # Again, if the walk gets stuck for 100 tries (i.e. checking 100 points) then it exits.
-# Like the original self-avoiding walk, this is angle-based.
 
 # function to run the self-avoiding walk
 # t --> the turtle
@@ -20,19 +21,15 @@ def selfAvoidingWalk_randomDist(t, x, y, rep):
     t.down()
     arrayOfPoints = [(x, y)] # list of points in the walk
     
-    degrees = random.randint(0, 360)
-    t.setheading(degrees)
-    x += (random.randint(-(t.screen.window_width() / 5), t.screen.window_width() / 5)) * math.sin(degrees * 180 / math.pi) 
-    y += (random.randint(-(t.screen.window_width() / 5), t.screen.window_width() / 5)) * math.cos(degrees * 180 / math.pi)
+    x += (t.screen.window_width() / 2) * (random.random()) * ((-1) ** random.randint(1, 2))
+    y += (t.screen.window_height() / 2) * (random.random()) * ((-1) ** random.randint(1, 2))
     arrayOfPoints += [(x, y)]
     t.goto(x, y)
-    (m, b) = solveLinearEquation(arrayOfPoints[0], arrayOfPoints[1])
+    (m, b) = solveLinearEquation(arrayOfPoints[0], arrayOfPoints[1]) # list of linear equations (in form (slope, y-intercept)) for all adjacent pairs of points in the walk
     linearEquations = [(m, b)]
     
-    degrees = random.randint(0, 360)
-    t.setheading(degrees)
-    x += (random.randint(-(t.screen.window_width() / 5), t.screen.window_width() / 5)) * math.sin(degrees * 180 / math.pi) 
-    y += (random.randint(-(t.screen.window_width() / 5), t.screen.window_width() / 5)) * math.cos(degrees * 180 / math.pi)
+    x += (t.screen.window_width() / 2) * (random.random()) * ((-1) ** random.randint(1, 2))
+    y += (t.screen.window_height() / 2) * (random.random()) * ((-1) ** random.randint(1, 2))
     arrayOfPoints += [(x, y)]
     t.goto(x, y)
     (m, b) = solveLinearEquation(arrayOfPoints[1], arrayOfPoints[2])
@@ -45,11 +42,10 @@ def selfAvoidingWalk_randomDist(t, x, y, rep):
         done = False
         stuck = 0
         while not done:
-            # pick a random angle, and take the components (fixed distance of 80)
-            degrees = random.randint(0, 360)
-            t.setheading(degrees)
-            w = (random.randint(-(t.screen.window_width() / 5), t.screen.window_width() / 5)) * math.sin(degrees * 180 / math.pi) 
-            z = (random.randint(-(t.screen.window_width() / 5), t.screen.window_width() / 5)) * math.cos(degrees * 180 / math.pi)
+            # pick a random component and its corresponding component
+            # the * ((-1) ** (random.randint(1, 2))) is to ensure that the component could be in any of the 4 quadrants
+            w = (t.screen.window_width() / 2) * (random.random()) * ((-1) ** random.randint(1, 2))
+            z = (t.screen.window_height() / 2) * (random.random()) * ((-1) ** random.randint(1, 2))
             
             if abs(x + w) < t.screen.window_width() / 2 and abs(y + z) < t.screen.window_height() / 2: # check if the point is within the window 
                 (currentX, currentY) = (x + w, y + z) # coordinates to test

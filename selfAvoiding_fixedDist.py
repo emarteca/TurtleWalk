@@ -36,7 +36,7 @@ def selfAvoidingWalk(t, x, y, rep, dist):
     x += step
     arrayOfPoints += [(x, y)]
     t.goto(x, y)
-    (m, b) = solveLinearEquation(arrayOfPoints[0], arrayOfPoints[1])
+    (m, b) = solveLinearEquation(arrayOfPoints[0], arrayOfPoints[1]) # list of linear equations (in form (slope, y-intercept)) for all adjacent pairs of points in the walk
     linearEquations = [(m, b)]
     
     step = random.random() * dist * ((-1) ** (random.randint(1, 2)))
