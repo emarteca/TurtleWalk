@@ -33,8 +33,8 @@ There are several minor variations of the algorithm.  All details are commented 
 Future ideas:
 
 	- Make the self-avoiding walk so there is a buffer range to avoid (i.e. the walk 
-	  cannot come within a specified distance of its own path, rather than just avoiding 
-	  crossing it)
+	  cannot come within a specified distance of its own path, rather than just 
+	  avoiding crossing it)
 	- Make a reflect-walk --> this would involve the walk reflecting off itself at the 
 	  same angle (i.e. the angle of reflection is equal to the angle of incidence)
 	  Hopefully this would end up being a simulation for total internal reflection.
